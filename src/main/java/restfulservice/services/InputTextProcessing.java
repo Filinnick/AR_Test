@@ -1,4 +1,4 @@
-package restfulservice.model;
+package restfulservice.services;
 
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,13 @@ public class InputTextProcessing {
 
     //метод для обработки текста, полученного в POST запросе
     private String stringProcessing(String string) {
-        String resultString = string;
 
         //разбиваем текст на строки, избавляясь от пробелов
         List<String> letterLines = new ArrayList<String>();
         for(int i = 0, n = string.length() ; i < n ; i++) {
             if (i == n-1) {
                 letterLines.add(string.replace(" ",""));
-                string = "";
+                //string = "";
                 break;
             }
             if (string.charAt(i) == '\n') {
@@ -36,7 +35,6 @@ public class InputTextProcessing {
                 i=0;
                 n = string.length();
             }
-
         }
 
         //получаем строки порядковых номеров букв
@@ -111,9 +109,7 @@ public class InputTextProcessing {
                 if(resultCharCode > 9) sb.append(" ");
                 if(resultCharCode <= 9) sb.append("  ");
             }
-
             else sb.append(c);
-
         }
 
         return sb.toString();
