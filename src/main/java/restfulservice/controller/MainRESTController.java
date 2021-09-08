@@ -1,6 +1,7 @@
 package restfulservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import restfulservice.dao.PaymentsDAO;
 import restfulservice.model.Payment;
@@ -9,9 +10,9 @@ import restfulservice.services.InputTextProcessing;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-@RestController
-@RequestMapping("/tests")
+@Controller
 public class MainRESTController {
 
     @Autowired
@@ -20,29 +21,31 @@ public class MainRESTController {
     @Autowired
     private PaymentsDAO paymentsDAO;
 
+    @GetMapping("/main")
+    public String mainPage() { return "main_page"; }
 
-    @PostMapping("/first")
-    public void postString(@RequestBody String text) {
+    @GetMapping("/firsttask")
+    public String firstTaskPage() { return "first_task"; }
+
+    @PostMapping("/firsttask")
+    public String postString(@RequestParam String text, Map<String, Object> model) {
         inputText.setInputString(text);
-    }
-
-    @GetMapping("/first")
-    public String getString() {
-        return inputText.getOutputString();
+        model.put("outputText",inputText.getOutputString());
+        return "first_task";
     }
 
     @PostMapping("/second")
-    public void addPayment(@RequestBody Payment payment) {
+    public void addPayment(@RequestParam Payment payment) {
         paymentsDAO.addPayment(payment);
     }
 
-    @GetMapping("/second/getall")
+    @GetMapping("/second/get_all")
     public List<Payment> getPayments() {
         return paymentsDAO.getPaymentList();
     }
 
     @GetMapping("/second/")
-    public Result getResult(@RequestBody Date date) {
+    public Result getResult(@RequestParam Date date) {
         List<Payment> payments = paymentsDAO.getPaymentList();
         Result currentResult = new Result();
         for(Payment payment : payments){

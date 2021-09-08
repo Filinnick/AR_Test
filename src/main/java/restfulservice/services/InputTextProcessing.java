@@ -43,6 +43,7 @@ public class InputTextProcessing {
             numLines.add(letterToNums(letterLine));
         }
 
+        //формируем выходной текст
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < numLines.size(); i++) {
             String currentLetterLine = letterLines.get(i);
@@ -52,12 +53,11 @@ public class InputTextProcessing {
 
                 //обработка знаков препинания и строковых символов
                 int c = currentLetterLine.charAt(j);
-                if( (currentLetterLine.charAt(j) != '\n' && currentLetterLine.charAt(j) != '\r') &&
-                        !(c > 32 && c <= 64) ) sb.append("  ");
-
+                if((c >= 1040 && c <= 1103) || (c == 1105 || c == 1025) ) sb.append("  ");
             }
             if(i == numLines.size() - 1) sb.append("\r\n");
             sb.append(numLines.get(i));
+
         }
         return sb.toString();
     }
@@ -68,9 +68,10 @@ public class InputTextProcessing {
         for(char c : line.toCharArray()){
             int resultCharCode = c;
 
+            //Буквы ё и Ё
             if (c == 1105 || c == 1025)
             {
-                sb.append(7); //Буквы ё и Ё
+                sb.append(7);
                 sb.append("  ");
             }
 

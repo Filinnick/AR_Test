@@ -30,15 +30,4 @@ public class PaymentsDAO {
         return paymentList;
     }
 
-
-
-
-
-    //TODO нужно сделать метод обновления платежа (в случае опечатки)
-    public void updatePayment(Payment payment) {
-    }
-
-    //TODO удаление платежа
-    public void deletePayment(Payment payment) {
-    }
 }

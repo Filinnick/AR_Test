@@ -3,7 +3,7 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>AR Soft test 1</title>
+        <title>AR Soft test</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,6 +12,7 @@
 
     </head>
     <body>
+    <#include "navbar.ftl">
     <div class="container mt-5">
         <#nested>
     </div>
