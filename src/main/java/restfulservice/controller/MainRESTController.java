@@ -6,7 +6,6 @@ import restfulservice.dao.PaymentsDAO;
 import restfulservice.model.Payment;
 import restfulservice.model.Result;
 import restfulservice.services.InputTextProcessing;
-import restfulservice.services.PaymentService;
 
 import java.util.Date;
 import java.util.List;
@@ -37,23 +36,25 @@ public class MainRESTController {
         paymentsDAO.addPayment(payment);
     }
 
-    @GetMapping("/second")
+    @GetMapping("/second/getall")
     public List<Payment> getPayments() {
         return paymentsDAO.getPaymentList();
     }
 
-    @GetMapping("/second/{date}")
+    @GetMapping("/second/")
     public Result getResult(@RequestBody Date date) {
         List<Payment> payments = paymentsDAO.getPaymentList();
         Result currentResult = new Result();
         for(Payment payment : payments){
-            /* if(date > payment.getDate) {
-            *       if(payment.getPart == 'д') { currentResult.setBalance = currentResult.getBalance + payment.getValue;
-            *               if(payment.getState) currentResult.setPercent = currentResult.getPercent + payment.getValue*0.13 //0.13 - налог
-            *       }
-            *       else { currentResult.setBalance = currentResult.getBalance - payment.getValue; }
-            * }
-             */
+             if(date.after(payment.getSupplyDate())) {
+                   if(payment.getPart() == 'д') {
+                       currentResult.setBalance(currentResult.getBalance() + payment.getValue());
+                       if(payment.getState()){
+                           currentResult.setPercent(currentResult.getPercent() + payment.getValue()*0.13F); //0.13 - налог
+                       }
+                   }
+                   else { currentResult.setBalance(currentResult.getBalance() - payment.getValue()); }
+             }
         }
 
         return currentResult;

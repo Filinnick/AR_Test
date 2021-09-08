@@ -25,7 +25,7 @@ public class Payment {
         this.supplyDate = supplyDate;
     }
 
-    public boolean isState() {
+    public boolean getState() {
         return state;
     }
 
