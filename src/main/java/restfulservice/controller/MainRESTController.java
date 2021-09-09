@@ -2,21 +2,29 @@ package restfulservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import restfulservice.dao.PaymentsDAO;
 import restfulservice.model.Payment;
 import restfulservice.model.Result;
 import restfulservice.services.InputTextProcessing;
+import restfulservice.services.PaymentListProcessing;
 
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 @Controller
 public class MainRESTController {
 
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
     @Autowired
     private InputTextProcessing inputText;
+
+    @Autowired
+    private PaymentListProcessing paymentListProcessing;
 
     @Autowired
     private PaymentsDAO paymentsDAO;
@@ -34,33 +42,40 @@ public class MainRESTController {
         return "first_task";
     }
 
-    @PostMapping("/second")
-    public void addPayment(@RequestParam Payment payment) {
-        paymentsDAO.addPayment(payment);
-    }
+    @GetMapping("/secondtask")
+    public String secondTaskPage() { return "second_task"; }
 
-    @GetMapping("/second/get_all")
-    public List<Payment> getPayments() {
-        return paymentsDAO.getPaymentList();
-    }
+    @PostMapping("/secondtask_payment")
+    public String addPayment(
+            @RequestParam String name,
+            @RequestParam String supplyDate,
+            @RequestParam(required = false) boolean state,
+            @RequestParam char part,
+            @RequestParam long value) throws ParseException {
 
-    @GetMapping("/second/")
-    public Result getResult(@RequestParam Date date) {
-        List<Payment> payments = paymentsDAO.getPaymentList();
-        Result currentResult = new Result();
-        for(Payment payment : payments){
-             if(date.after(payment.getSupplyDate())) {
-                   if(payment.getPart() == 'д') {
-                       currentResult.setBalance(currentResult.getBalance() + payment.getValue());
-                       if(payment.getState()){
-                           currentResult.setPercent(currentResult.getPercent() + payment.getValue()*0.13F); //0.13 - налог
-                       }
-                   }
-                   else { currentResult.setBalance(currentResult.getBalance() - payment.getValue()); }
-             }
+        Payment payment = new Payment();
+
+        payment.setName(name);
+        payment.setSupplyDate(formatter.parse(supplyDate));
+        if(!state) {
+            state = false;
         }
+        payment.setState(state);
+        payment.setPart(part);
+        payment.setValue(value);
 
-        return currentResult;
+        paymentsDAO.addPayment(payment);
+
+        return "second_task";
     }
+
+    @PostMapping("/secondtask_date")
+    public String getDateresult(@RequestParam String inputDate, Map<String, Object> model) throws ParseException {
+        paymentListProcessing.setPaymentList(paymentsDAO.getPaymentList());
+        Result result = paymentListProcessing.getResult(formatter.parse(inputDate));
+        model.put("result", result);
+        return "second_task";
+    }
+
 
 }

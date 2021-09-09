@@ -18,7 +18,7 @@ public class InputTextProcessing {
         this.inputString = inputString;
     }
 
-    //метод для обработки текста, полученного в POST запросе
+    //метод для обработки текста, полученного в запросе
     private String stringProcessing(String string) {
 
         //разбиваем текст на строки, избавляясь от пробелов
