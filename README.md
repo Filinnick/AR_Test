@@ -30,8 +30,6 @@
 
 ## Автор
 
-Contributors names and contact info
-
 Филинов Н.Ю. 
 [@filinnick](https://vk.com/nickfilinov)
 
